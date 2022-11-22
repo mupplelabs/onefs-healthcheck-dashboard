@@ -126,54 +126,6 @@
                 "value": "color-background-solid"
               }
             ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "run_status"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 243
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "start_time"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 262
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "id"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 362
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "checklist_id"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 365
-              }
-            ]
           }
         ]
       },
@@ -274,7 +226,8 @@
             "align": "left",
             "displayMode": "auto",
             "filterable": true,
-            "inspect": false
+            "inspect": false,
+            "minWidth": 50
           },
           "links": [
             {
@@ -322,49 +275,9 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "node"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 366
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "name"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 368
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "passed"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 501
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
               "options": "status"
             },
             "properties": [
-              {
-                "id": "custom.width",
-                "value": 1075
-              },
               {
                 "id": "custom.displayMode",
                 "value": "color-background-solid"
@@ -514,8 +427,8 @@
       {
         "current": {
           "selected": false,
-          "text": "basic20221101T0000",
-          "value": "basic20221101T0000"
+          "text": "security20221020T1655",
+          "value": "security20221020T1655"
         },
         "hide": 2,
         "includeAll": false,
@@ -545,7 +458,7 @@
         "name": "myAdvise",
         "options": [
           {
-            "selected": true,
+            "selected": false,
             "text": "healthcheck_version",
             "value": "healthcheck_version"
           }
@@ -566,7 +479,7 @@
         "name": "hcDetail",
         "options": [
           {
-            "selected": true,
+            "selected": false,
             "text": "select a healthcheck result to review its details...",
             "value": "select a healthcheck result to review its details..."
           }
@@ -587,7 +500,7 @@
         "name": "node",
         "options": [
           {
-            "selected": true,
+            "selected": false,
             "text": "cluster",
             "value": "cluster"
           }
@@ -646,6 +559,6 @@
   "timezone": "",
   "title": "Healthcheck Dashboard V1.1",
   "uid": "7GUuh2O4z",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
