@@ -9,6 +9,10 @@ A grafana dashboard to visualize OneFS Healthcheck results for multiple clusters
 	
 2. Install dynamic text plugin 
   https://github.com/VolkovLabs/volkovlabs-dynamictext-panel
+  
+4. Configure a User on each PowerScale Cluster with the folowing minimum RBAC permissions:
+  - ISI_PRIV_SYS_SUPPORT 
+  - ISI_PRIV_LOGIN_PAPI 
 	
 3. Configure infinity plugin:
   - Name: infinity
