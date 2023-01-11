@@ -1,7 +1,8 @@
 # onefs-healthcheck-dashboard
 A grafana dashboard to visualize OneFS Healthcheck results for multiple clusters
 
-![grafik](https://user-images.githubusercontent.com/75881070/202432427-8f9f89ab-2ffa-4f86-bb02-e9dd4114c44a.png)
+![grafik](https://user-images.githubusercontent.com/75881070/211829997-def87545-fe4b-49a8-bf40-c1b89b5f4085.png)
+![grafik](https://user-images.githubusercontent.com/75881070/211830157-4c54b0f4-6a31-4c1a-9cd5-90d16dcda4f7.png)
 
 1. Install Infinity Datasource Plugin (minimum version 1.2).
   Download the required version of release zip file from github and extract into your grafana plugin folder. 
@@ -10,26 +11,30 @@ A grafana dashboard to visualize OneFS Healthcheck results for multiple clusters
 2. Install dynamic text plugin 
   https://github.com/VolkovLabs/volkovlabs-dynamictext-panel
   
-4. equip or create a monitor user on each PowerScale Cluster with the folowing minimum RBAC privilidges:
-  - ISI_PRIV_SYS_SUPPORT 
-  - ISI_PRIV_LOGIN_PAPI 
-	
+4. equip or create a monitor user on each PowerScale Cluster with the folowing minimum RBAC Read Only privilidges:
+	  - ISI_PRIV_SYS_SUPPORT 
+	  - ISI_PRIV_LOGIN_PAPI 
+	  
+   (Feel free to add more privilidges as required if you intend to explore more possibilities.)
+   
 3. Configure infinity plugin:
-  - Name: infinity
-  - Auth Type: Basic Auth
-  - User: \<your API user\>
-  - Password: \<your API users Password\>
-  - Allowed hosts:
-    - Add an entry for every fqdn of your clusters.
-    - Eg. https://admin.cluster.customer.com:8080
+	  - Name: infinity
+	  - Auth Type: Basic Auth
+	  - User: \<your API user\>
+	  - Password: \<your API users Password\>
+	  - Allowed hosts:
+	    - Add an entry for every fqdn of your clusters.
+	    - Eg. https://admin.cluster.customer.com:8080
 			
   - Add reference data, a json containing a mapping between Cluster name and fqdn.   
 		This is used later to navigate the dashboard. 
 		Eg.:  
-			{ "clusters" : [   
-			{"name" : "SB2","fqdn":"10.231.153.40"},  
-			{"name" : "HEXIE", "fqdn":"192.168.188.194"},  
-			{"name": "gotham","fqdn":"192.168.188.93"}  
-			]}  
+```
+{ "clusters" : [
+	{"name" : "SB2", "fqdn" : "10.231.153.40"},
+	{"name" : "HEXIE", "fqdn" : "192.168.188.194"},
+	{"name" : "gotham", "fqdn" : "192.168.188.93"}
+]}
+```
 			
-4. Install the dashboard json
+5. Install the dashboard json files
