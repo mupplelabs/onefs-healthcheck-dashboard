@@ -12,7 +12,7 @@ A grafana dashboard to visualize OneFS Healthcheck results for multiple clusters
 2. Install dynamic text plugin via the plugin library. 
   https://github.com/VolkovLabs/volkovlabs-dynamictext-panel
   
-4. equip or create a monitor user on each PowerScale Cluster with the folowing minimum RBAC Read Only privilidges:
+4. equip or create a monitor user on each PowerScale Cluster with the following minimum RBAC Read Only privileges:
 	  - ISI_PRIV_SYS_SUPPORT 
 	  - ISI_PRIV_LOGIN_PAPI 
 	  
