@@ -4,11 +4,12 @@ A grafana dashboard to visualize OneFS Healthcheck results for multiple clusters
 ![grafik](https://user-images.githubusercontent.com/75881070/211829997-def87545-fe4b-49a8-bf40-c1b89b5f4085.png)
 ![grafik](https://user-images.githubusercontent.com/75881070/211830157-4c54b0f4-6a31-4c1a-9cd5-90d16dcda4f7.png)
 
-1. Install Infinity Datasource Plugin (minimum version 1.2).
-  Download the required version of release zip file from github and extract into your grafana plugin folder. 
-  Then restart Grafana.
+1. Install Infinity Datasource Plugin (minimum required version 1.2).
+	  - Download the required version of release zip file from github and extract into your grafana plugin folder.  
+	    Then restart Grafana.
+	  - Or install using the grafana plugin library.
 	
-2. Install dynamic text plugin 
+2. Install dynamic text plugin via the plugin library. 
   https://github.com/VolkovLabs/volkovlabs-dynamictext-panel
   
 4. equip or create a monitor user on each PowerScale Cluster with the folowing minimum RBAC Read Only privilidges:
@@ -38,3 +39,8 @@ A grafana dashboard to visualize OneFS Healthcheck results for multiple clusters
 ```
 			
 5. Install the dashboard json files
+
+# Limitations
+- the inifinity datasource does not support session based authentication, hence we must utilize and enable Basic Auth on our clusters.
+- the described approach uses one datasource for all clusters, hence the "monitor" users created above must have the same password on all clusters.
+- on large clusters the initial load time for the HCF panels can take a couple of seconds - Patience you must have, my young padawan.
