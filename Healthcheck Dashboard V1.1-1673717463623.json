@@ -1,0 +1,594 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_INFINITY",
+      "label": "Infinity",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "yesoreyeram-infinity-datasource",
+      "pluginName": "Infinity"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "9.2.4"
+    },
+    {
+      "type": "panel",
+      "id": "marcusolsson-dynamictext-panel",
+      "name": "Dynamic Text",
+      "version": "2.2.0"
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "yesoreyeram-infinity-datasource",
+      "name": "Infinity",
+      "version": "1.3.0"
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "${DS_INFINITY}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "filterable": true,
+            "inspect": false
+          },
+          "links": [
+            {
+              "title": "",
+              "url": "/d/${__dashboard.uid}/healthcheck-dashboard?var-evaluations=${__data.fields.id}﻿﻿&var-node&var-myAdvise=Select a healthcheck item to view&var-hcDetail=\"\"&var-papiHost=﻿${papiHost}&${evalPassed:queryparam}"
+            }
+          ],
+          "mappings": [
+            {
+              "options": {
+                "FAIL": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "FAIL"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "result"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "color-background-solid"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "footer": {
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "frameIndex": 1,
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "columns": [
+            {
+              "selector": "checklist_id",
+              "text": "",
+              "type": "string"
+            },
+            {
+              "selector": "id",
+              "text": "",
+              "type": "string"
+            },
+            {
+              "selector": "start_time",
+              "text": "",
+              "type": "timestamp_epoch_s"
+            },
+            {
+              "selector": "run_status",
+              "text": "",
+              "type": "string"
+            },
+            {
+              "selector": "result",
+              "text": "",
+              "type": "string"
+            }
+          ],
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "${DS_INFINITY}"
+          },
+          "filters": [],
+          "format": "table",
+          "global_query_id": "",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "url": "https://${papiHost}:8080/platform/10/healthcheck/evaluations",
+          "url_options": {
+            "data": "",
+            "method": "GET",
+            "params": [
+              {
+                "key": "level",
+                "value": "list"
+              }
+            ]
+          }
+        }
+      ],
+      "title": "Available HC Results on Cluster: ${papiHost.text}",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "${DS_INFINITY}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "displayMode": "auto",
+            "filterable": true,
+            "inspect": false,
+            "minWidth": 50
+          },
+          "links": [
+            {
+              "title": "",
+              "url": "/d/${__dashboard.uid}﻿/healthcheck-dashboard?﻿${evaluations:queryparam}﻿&var-node=﻿${__data.fields.node}﻿&var-myAdvise=﻿${__data.fields.name}﻿&var-hcDetail=﻿${__data.fields.details}﻿&﻿${papiHost:queryparam}﻿&﻿${evalPassed:queryparam}"
+            }
+          ],
+          "mappings": [
+            {
+              "options": {
+                "CRITICAL": {
+                  "color": "red",
+                  "index": 1,
+                  "text": "CRITICAL"
+                },
+                "INFO": {
+                  "color": "green",
+                  "index": 2,
+                  "text": "INFO"
+                },
+                "WARNING": {
+                  "color": "orange",
+                  "index": 0,
+                  "text": "WARNING"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "status"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "color-background-solid"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "details"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 5,
+      "options": {
+        "footer": {
+          "enablePagination": true,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "columns": [],
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "${DS_INFINITY}"
+          },
+          "filters": [
+            {
+              "field": "",
+              "operator": "equals",
+              "value": [
+                "basic"
+              ]
+            }
+          ],
+          "format": "table",
+          "global_query_id": "",
+          "parser": "uql",
+          "refId": "A",
+          "root_selector": "",
+          "source": "url",
+          "type": "json",
+          "uql": "parse-json\r\n  jsonata \"evaluations.details\"\r\n  project \"node\", \"name\", \"passed\", \"status\", \"details\"\r\n\r\n",
+          "url": "https://${papiHost:value}:8080/platform/10/healthcheck/evaluations/${evaluations}",
+          "url_options": {
+            "data": "",
+            "method": "GET",
+            "params": [
+              {
+                "key": "detailed",
+                "value": "${evalPassed:value}"
+              }
+            ]
+          }
+        }
+      ],
+      "title": "HC Result Details: ${evaluations}",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "yesoreyeram-infinity-datasource",
+        "uid": "${DS_INFINITY}"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "id": 9,
+      "options": {
+        "content": "<h1>{{variable \"myAdvise\"}} - node: {{variable \"node\"}}</h1>\n<p>\n  {{#if (isArray data)}}\n<p>\n  {{#each data}}\n  {{#if (isArray result)}}\n<ul>{{#each result}}<li>{{{urlify this}}}</li>{{/each}}</ul>\n{{else if result}}\n{{#each (linesIn result '. ')}}\n{{{separateKB this}}}{{{nextLine this 150}}}\n{{/each}}\n{{/if}}\n</p>\n{{/each}}\n{{/if}}\n</p>",
+        "defaultContent": "Select a Checklist above to review the details.\r\n",
+        "editor": {
+          "format": "auto",
+          "height": 200,
+          "language": "html"
+        },
+        "everyRow": false,
+        "helpers": "function anchor(text) {\r\n  var urlRegex = /(https?:\\/\\/[^\\s]+)\\b/gim;\r\n  var result = text.replace(urlRegex, '<a style=\"color:DodgerBlue;\" href=\"$1\">$1</a>');\r\n  return result\r\n};\r\n\r\nvar KBregex = /([^\\.!?]*)(https?:\\/\\/[^\\s]+)([^\\.!?]*[\\.!?])/gi;\r\nhandlebars.registerHelper('separateKB',\r\n  context => context.replace(KBregex, function (KB) {\r\n    return new handlebars.SafeString(\"</p><p>\" + anchor(KB) + \"</p>\");\r\n  }));\r\n\r\nhandlebars.registerHelper('urlify', function (context) {\r\n  return anchor(context)\r\n});\r\n\r\nhandlebars.registerHelper('isArray', function (text) {\r\n  return text instanceof Array;\r\n});\r\n\r\nvar lineLength = 0;\r\nhandlebars.registerHelper('nextLine', function (text, value) {\r\n  lineLength += text.length;\r\n  if (lineLength >= value) {\r\n    lineLength = 0;\r\n    return \"<br/>\";\r\n  }\r\n});\r\n\r\nhandlebars.registerHelper('testSplit', function (text, chr) {\r\n  if (text.toLowerCase().indexOf(\"copyright\") != -1) {\r\n    return text.split(chr);\r\n  }\r\n  return text;\r\n});\r\n\r\nhandlebars.registerHelper('linesIn', function (text, chr) {\r\n  lines = text.split(chr);\r\n  output = lines.map((line, index, { length }) => {\r\n    if (index + 1 != length) {\r\n      return line + chr\r\n    } else {\r\n      return line\r\n    };\r\n  });\r\n  return output;\r\n});"
+      },
+      "pluginVersion": "9.2.4",
+      "targets": [
+        {
+          "columns": [
+            {
+              "selector": "detail",
+              "text": "",
+              "type": "string"
+            }
+          ],
+          "csv_options": {
+            "columns": ""
+          },
+          "data": "{\"detail\": ${hcDetail} }",
+          "datasource": {
+            "type": "yesoreyeram-infinity-datasource",
+            "uid": "${DS_INFINITY}"
+          },
+          "filters": [],
+          "format": "dataframe",
+          "global_query_id": "",
+          "json_options": {
+            "columnar": false,
+            "root_is_not_array": false
+          },
+          "parser": "uql",
+          "refId": "A",
+          "root_selector": "",
+          "source": "inline",
+          "type": "json",
+          "uql": "parse-json\r\n  project \"detail\"",
+          "url": "https://${copy_of_Cluster}:8080/platform/10/healthcheck/evaluations/${evaluations}",
+          "url_options": {
+            "data": "",
+            "method": "GET",
+            "params": []
+          }
+        }
+      ],
+      "type": "marcusolsson-dynamictext-panel"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "basic20230114T0000",
+          "value": "basic20230114T0000"
+        },
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "evaluations",
+        "options": [
+          {
+            "selected": false,
+            "text": "no evaluation selected",
+            "value": "no evaluation selected"
+          }
+        ],
+        "query": "no evaluation selected",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Select a healthcheck item to view",
+          "value": "Select a healthcheck item to view"
+        },
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "myAdvise",
+        "options": [
+          {
+            "selected": false,
+            "text": "healthcheck_version",
+            "value": "healthcheck_version"
+          }
+        ],
+        "query": "healthcheck_version",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "\"\"",
+          "value": "\"\""
+        },
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "hcDetail",
+        "options": [
+          {
+            "selected": false,
+            "text": "select a healthcheck result to review its details...",
+            "value": "select a healthcheck result to review its details..."
+          }
+        ],
+        "query": "select a healthcheck result to review its details...",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "true",
+          "value": "true"
+        },
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "node",
+        "options": [
+          {
+            "selected": false,
+            "text": "cluster",
+            "value": "cluster"
+          }
+        ],
+        "query": "cluster",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "yesoreyeram-infinity-datasource",
+          "uid": "${DS_INFINITY}"
+        },
+        "definition": "Infinity- (infinity) json",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Cluster",
+        "multi": false,
+        "name": "papiHost",
+        "options": [],
+        "query": {
+          "infinityQuery": {
+            "columns": [],
+            "filters": [],
+            "format": "table",
+            "parser": "uql",
+            "refId": "variable",
+            "referenceName": "Clusters",
+            "root_selector": "",
+            "source": "reference",
+            "type": "json",
+            "uql": "parse-json\r\n  jsonata \"clusters.$string()\"",
+            "url": "https://github.com/yesoreyeram/grafana-infinity-datasource/blob/main/testdata/users.json",
+            "url_options": {
+              "data": "",
+              "method": "GET"
+            }
+          },
+          "query": "",
+          "queryType": "infinity"
+        },
+        "refresh": 1,
+        "regex": "/\\\"name\\\":\"(?<text>[^\"]+)|\\\"fqdn\\\":\"(?<value>[^\"]+)/g",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "no",
+          "value": "false"
+        },
+        "description": "Also return details for items that pass",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Show passed",
+        "multi": false,
+        "name": "evalPassed",
+        "options": [
+          {
+            "selected": true,
+            "text": "no",
+            "value": "false"
+          },
+          {
+            "selected": false,
+            "text": "yes",
+            "value": "true"
+          }
+        ],
+        "query": "no : false, yes : true ,",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Healthcheck Dashboard V1.1",
+  "uid": "7GUuh2O4z",
+  "version": 78,
+  "weekStart": ""
+}
