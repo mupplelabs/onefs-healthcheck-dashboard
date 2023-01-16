@@ -85,7 +85,7 @@
           "links": [
             {
               "title": "",
-              "url": "/d/${__dashboard.uid}/healthcheck-dashboard?var-evaluations=${__data.fields.id}﻿﻿&var-node&var-myAdvise=Select a healthcheck item to view&var-hcDetail=\"\"&var-papiHost=﻿${papiHost}&${evalPassed:queryparam}"
+              "url": "/d/${__dashboard.uid}/healthcheck-dashboard?var-evaluations=${__data.fields.id}&var-node&var-myAdvise=Select a healthcheck item to view&var-hcDetail=\"\"&var-papiHost=${papiHost}&${evalPassed:queryparam}"
             }
           ],
           "mappings": [
@@ -147,7 +147,12 @@
         },
         "frameIndex": 1,
         "showHeader": true,
-        "sortBy": []
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "id"
+          }
+        ]
       },
       "pluginVersion": "9.2.4",
       "targets": [
@@ -227,7 +232,7 @@
           "links": [
             {
               "title": "",
-              "url": "/d/${__dashboard.uid}﻿/healthcheck-dashboard?﻿${evaluations:queryparam}﻿&var-node=﻿${__data.fields.node}﻿&var-myAdvise=﻿${__data.fields.name}﻿&var-hcDetail=﻿${__data.fields.details}﻿&﻿${papiHost:queryparam}﻿&﻿${evalPassed:queryparam}"
+              "url": "/d/${__dashboard.uid}/healthcheck-dashboard?${evaluations:queryparam}&var-node=${__data.fields.node}&var-myAdvise=${__data.fields.name}&var-hcDetail=${__data.fields.details}&${papiHost:queryparam}&${evalPassed:queryparam}"
             }
           ],
           "mappings": [
@@ -350,7 +355,7 @@
           }
         }
       ],
-      "title": "HC Result Details: ${evaluations}",
+      "title": "HC Result Details: ${evaluations} of ${papiHost:text}",
       "type": "table"
     },
     {
@@ -367,15 +372,15 @@
       },
       "id": 9,
       "options": {
-        "content": "<h1>{{variable \"myAdvise\"}} - node: {{variable \"node\"}}</h1>\n<p>\n  {{#if (isArray data)}}\n<p>\n  {{#each data}}\n  {{#if (isArray result)}}\n<ul>{{#each result}}<li>{{{urlify this}}}</li>{{/each}}</ul>\n{{else if result}}\n{{#each (linesIn result '. ')}}\n{{{separateKB this}}}{{{nextLine this 150}}}\n{{/each}}\n{{/if}}\n</p>\n{{/each}}\n{{/if}}\n</p>",
-        "defaultContent": "Select a Checklist above to review the details.\r\n",
+        "content": "{{debug false}}\n<!-- take the selected evaulation name as well as the \"node\" in scope from variables -->\n<h1>{{variable \"myAdvise\"}} - node: {{variable \"node\"}}</h1>\n<p>\n  <!-- the details data should be an array else we ignore it -->\n  {{#if (isArray data)}}\n  {{#each data}}\n  <!-- now we iterate thru each the \"result\" (of the UQL query) -->\n  <!-- if the result contains an array itself we turn this into a unsorted list. -->\n  <!-- and detect possible web-links and turn them into working anchors -->\n<p>\n  {{#if (isArray result)}}\n<ul>{{#each result}}<li>{{{countOut (urlify (isiFy (countIn this)))}}}</li>{{/each}}</ul>\n{{else if result}}\n<!-- for any non array in \"result\" we split the sentences, separarate out statements with KB links etc., and add a line break after 150 characters. -->\n{{#each (linesFrom result)}}\n{{#if (hasURL this)}}\n{{resetLine}}\n<p>{{{countOut (urlify (countIn this))}}}</p>\n{{else}}\n{{{countOut (isiFy (countIn this))}}}{{{nextLine this 125}}}\n{{/if}}\n<!--seeks for KB links and turns them into an own paragraph, line break on lines longer than 150 characters. -->\n{{/each}}\n{{/if}}\n</p>\n{{/each}}\n{{/if}}\n</p>\n{{{debugOutput}}}",
+        "defaultContent": "Select a Checklist above to review the details.",
         "editor": {
           "format": "auto",
           "height": 200,
           "language": "html"
         },
         "everyRow": false,
-        "helpers": "function anchor(text) {\r\n  var urlRegex = /(https?:\\/\\/[^\\s]+)\\b/gim;\r\n  var result = text.replace(urlRegex, '<a style=\"color:DodgerBlue;\" href=\"$1\">$1</a>');\r\n  return result\r\n};\r\n\r\nvar KBregex = /([^\\.!?]*)(https?:\\/\\/[^\\s]+)([^\\.!?]*[\\.!?])/gi;\r\nhandlebars.registerHelper('separateKB',\r\n  context => context.replace(KBregex, function (KB) {\r\n    return new handlebars.SafeString(\"</p><p>\" + anchor(KB) + \"</p>\");\r\n  }));\r\n\r\nhandlebars.registerHelper('urlify', function (context) {\r\n  return anchor(context)\r\n});\r\n\r\nhandlebars.registerHelper('isArray', function (text) {\r\n  return text instanceof Array;\r\n});\r\n\r\nvar lineLength = 0;\r\nhandlebars.registerHelper('nextLine', function (text, value) {\r\n  lineLength += text.length;\r\n  if (lineLength >= value) {\r\n    lineLength = 0;\r\n    return \"<br/>\";\r\n  }\r\n});\r\n\r\nhandlebars.registerHelper('testSplit', function (text, chr) {\r\n  if (text.toLowerCase().indexOf(\"copyright\") != -1) {\r\n    return text.split(chr);\r\n  }\r\n  return text;\r\n});\r\n\r\nhandlebars.registerHelper('linesIn', function (text, chr) {\r\n  lines = text.split(chr);\r\n  output = lines.map((line, index, { length }) => {\r\n    if (index + 1 != length) {\r\n      return line + chr\r\n    } else {\r\n      return line\r\n    };\r\n  });\r\n  return output;\r\n});"
+        "helpers": "function addAnchor(text) {\r\n  var urlRegex = /(https?:\\/\\/[^\\s]+)\\b/gim;\r\n  var result = text.replace(urlRegex, '<a style=\"color:DodgerBlue;\" href=\"$1\">$1</a>');\r\n  return result\r\n};\r\n\r\nhandlebars.registerHelper('hasURL', function (text) {\r\n  var urlRegex = /(https?:\\/\\/[^\\s]+)\\b/gim;\r\n  return urlRegex.test(text);\r\n});\r\n\r\nhandlebars.registerHelper('urlify', function (context) {\r\n  return addAnchor(context);\r\n});\r\n\r\nhandlebars.registerHelper('isiFy', function (text) {\r\n  const isiRegex = /(\"|')(isi.+?)(\"|')/g;\r\n  var result = text.replace(isiRegex, '</p><p><code>$2</code></p><p>');\r\n  return result\r\n});\r\n\r\nhandlebars.registerHelper('isArray', function (text) {\r\n  return text instanceof Array;\r\n});\r\n\r\nvar lineLength = 0;\r\nhandlebars.registerHelper('nextLine', function (text, value) {\r\n  lineLength += text.length;\r\n  if (lineLength >= value) {\r\n    lineLength = 0;\r\n    return \"<br/>\";\r\n  }\r\n});\r\n\r\nhandlebars.registerHelper('resetLine', function () {\r\n  lineLength = 0;\r\n});\r\n\r\nhandlebars.registerHelper('linesFrom', function (text) {\r\n  const sepFilter = /[\\.!?]\\s|[\\.!?]+$/g;\r\n  const matches = text.matchAll(sepFilter);\r\n  var lines = [];\r\n  lastIndex = 0;\r\n  for (const match of matches) {\r\n    line = text.substring(lastIndex, match.index + 1);\r\n    lastIndex = match.index + match.length;\r\n    lines.push(line);\r\n  }\r\n  if (lines.length === 0 && text.length > 0) {\r\n    lines.push(text);\r\n  } else if (lastIndex < text.length) {\r\n    line = text.substring(lastIndex).trim();\r\n    lines.push(line);\r\n  };\r\n  return lines;\r\n});\r\n\r\n// debugging input count should be smaller or equal than output count.\r\nvar countSourceChr = 0;\r\nvar countOutputChr = 0;\r\nvar debugging = false;\r\n\r\nhandlebars.registerHelper('countOut', function (text) {\r\n  if (debugging) {\r\n    countOutputChr += text.length;\r\n  };\r\n  return text;\r\n});\r\nhandlebars.registerHelper('countIn', function (text) {\r\n  if (debugging) {\r\n    countSourceChr += text.length;\r\n  }\r\n  return text;\r\n});\r\nhandlebars.registerHelper('debug', function (mBool) {\r\n  debugging = mBool;\r\n  countSourceChr = 0;\r\n  countOutputChr = 0;\r\n  if (debugging) {\r\n    return \"debug: \" + debugging;\r\n  }\r\n});\r\n\r\nhandlebars.registerHelper('debugOutput', function () {\r\n  if (debugging) {\r\n    var outMessage = \"Total input text lenght: \" + countSourceChr + \"<br>\" + \"Total output text lenght: \" + countOutputChr + \"<br>\" + \"Matches? \" + (countOutputChr === countSourceChr) + \"<br>\" + \"Differece: \" + (countOutputChr - countSourceChr);\r\n    return outMessage;\r\n  };\r\n});"
       },
       "pluginVersion": "9.2.4",
       "targets": [
@@ -428,8 +433,8 @@
       {
         "current": {
           "selected": false,
-          "text": "basic20230114T0000",
-          "value": "basic20230114T0000"
+          "text": "basic20230116T0000",
+          "value": "basic20230116T0000"
         },
         "hide": 2,
         "includeAll": false,
@@ -450,8 +455,8 @@
       {
         "current": {
           "selected": false,
-          "text": "Select a healthcheck item to view",
-          "value": "Select a healthcheck item to view"
+          "text": "basic_auth_enabled",
+          "value": "basic_auth_enabled"
         },
         "hide": 2,
         "includeAll": false,
@@ -471,8 +476,8 @@
       {
         "current": {
           "selected": false,
-          "text": "\"\"",
-          "value": "\"\""
+          "text": "[\"HTTP Basic Authentication is enabled. Leaving basic authentication enabled may be less secure than disabling it, depending on your security environment and requirements. Basic auth can be disabled by running 'isi_gconfig -t web-config auth_basic=false'.\"]",
+          "value": "[\"HTTP Basic Authentication is enabled. Leaving basic authentication enabled may be less secure than disabling it, depending on your security environment and requirements. Basic auth can be disabled by running 'isi_gconfig -t web-config auth_basic=false'.\"]"
         },
         "hide": 2,
         "includeAll": false,
@@ -492,8 +497,8 @@
       {
         "current": {
           "selected": false,
-          "text": "true",
-          "value": "true"
+          "text": "cluster",
+          "value": "cluster"
         },
         "hide": 2,
         "includeAll": false,
@@ -501,7 +506,7 @@
         "name": "node",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "cluster",
             "value": "cluster"
           }
@@ -552,7 +557,7 @@
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "no",
           "value": "false"
         },
@@ -589,6 +594,6 @@
   "timezone": "",
   "title": "Healthcheck Dashboard V1.1",
   "uid": "7GUuh2O4z",
-  "version": 78,
+  "version": 106,
   "weekStart": ""
 }

@@ -302,7 +302,7 @@
             {
               "targetBlank": true,
               "title": "WebUi for ${papiHost:text}",
-              "url": "https://${papiHost:value}:8080/\r\n\r"
+              "url": "https://${papiHost:value}:8080/"
             }
           ],
           "mappings": [
@@ -742,7 +742,7 @@
           "links": [
             {
               "title": "Healthcheck Details",
-              "url": "/d/7GUuh2O4z/healthcheck-dashboard?var-evaluations=${__data.fields.id}﻿﻿&var-node&var-myAdvise=Select a healthcheck item to view&var-hcDetail=\"\"&var-papiHost=﻿${papiHost}"
+              "url": "/d/7GUuh2O4z/healthcheck-dashboard?var-evaluations=${__data.fields.id}&var-node&var-myAdvise=Select a healthcheck item to view&var-hcDetail=\"\"&var-papiHost=${papiHost}"
             }
           ],
           "mappings": [
