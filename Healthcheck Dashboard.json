@@ -372,7 +372,7 @@
       },
       "id": 9,
       "options": {
-        "content": "{{debug false}}\n<!-- take the selected evaulation name as well as the \"node\" in scope from variables -->\n<h1>{{variable \"myAdvise\"}} - node: {{variable \"node\"}}</h1>\n<p>\n  <!-- the details data should be an array else we ignore it -->\n  {{#if (isArray data)}}\n  {{#each data}}\n  <!-- now we iterate thru each the \"result\" (of the UQL query) -->\n  <!-- if the result contains an array itself we turn this into a unsorted list. -->\n  <!-- and detect possible web-links and turn them into working anchors -->\n<p>\n  {{#if (isArray result)}}\n<ul>{{#each result}}<li>{{{countOut (urlify (isiFy (countIn this)))}}}</li>{{/each}}</ul>\n{{else if result}}\n<!-- for any non array in \"result\" we split the sentences, separarate out statements with KB links etc., and add a line break after 150 characters. -->\n{{#each (linesFrom result)}}\n{{#if (hasURL this)}}\n{{resetLine}}\n<p>{{{countOut (urlify (countIn this))}}}</p>\n{{else}}\n{{{countOut (isiFy (countIn this))}}}{{{nextLine this 125}}}\n{{/if}}\n<!--seeks for KB links and turns them into an own paragraph, line break on lines longer than 150 characters. -->\n{{/each}}\n{{/if}}\n</p>\n{{/each}}\n{{/if}}\n</p>\n{{{debugOutput}}}",
+        "content": "{{debug false}}\n<!-- take the selected evaulation name as well as the \"node\" in scope from variables -->\n<h1>{{variable \"myAdvise\"}} - node: {{variable \"node\"}}</h1>\n<p>\n  <!-- the details data should be an array else we ignore it -->\n  {{#if (isArray data)}}\n  {{#each data}}\n  <!-- now we iterate thru each the \"result\" (of the UQL query) -->\n  <!-- if the result contains an array itself we turn this into a unsorted list. -->\n  <!-- and detect possible web-links and turn them into working anchors -->\n<p>\n  {{#if (isArray result)}}\n<ul>{{#each result}}<li>{{{countOut (urlify (isiFy (countIn this)))}}}</li>{{/each}}</ul>\n{{else if result}}\n<!-- for any non array in \"result\" we split the sentences, separarate out statements with KB links etc., and add a line break after 150 characters. -->\n{{#each (linesFrom result)}}\n{{#if (hasURL this)}}\n{{resetLine}}\n<p>{{{countOut (urlify (countIn this))}}}</p>\n{{else if (isJson this)}}\n{{resetLine}}\n{{{countOut (jsonpp (countIn this))}}}\n{{else}}\n{{{countOut (isiFy (countIn this))}}}{{{nextLine this 125}}}\n{{/if}}\n<!--seeks for KB links and turns them into an own paragraph, line break on lines longer than 150 characters. -->\n{{/each}}\n{{/if}}\n</p>\n{{/each}}\n{{/if}}\n</p>\n{{{debugOutput}}}",
         "defaultContent": "Select a Checklist above to review the details.",
         "editor": {
           "format": "auto",
@@ -380,7 +380,7 @@
           "language": "html"
         },
         "everyRow": false,
-        "helpers": "function addAnchor(text) {\r\n  var urlRegex = /(https?:\\/\\/[^\\s]+)\\b/gim;\r\n  var result = text.replace(urlRegex, '<a style=\"color:DodgerBlue;\" href=\"$1\">$1</a>');\r\n  return result\r\n};\r\n\r\nhandlebars.registerHelper('hasURL', function (text) {\r\n  var urlRegex = /(https?:\\/\\/[^\\s]+)\\b/gim;\r\n  return urlRegex.test(text);\r\n});\r\n\r\nhandlebars.registerHelper('urlify', function (context) {\r\n  return addAnchor(context);\r\n});\r\n\r\nhandlebars.registerHelper('isiFy', function (text) {\r\n  const isiRegex = /(\"|')(isi.+?)(\"|')/g;\r\n  var result = text.replace(isiRegex, '</p><p><code>$2</code></p><p>');\r\n  return result\r\n});\r\n\r\nhandlebars.registerHelper('isArray', function (text) {\r\n  return text instanceof Array;\r\n});\r\n\r\nvar lineLength = 0;\r\nhandlebars.registerHelper('nextLine', function (text, value) {\r\n  lineLength += text.length;\r\n  if (lineLength >= value) {\r\n    lineLength = 0;\r\n    return \"<br/>\";\r\n  }\r\n});\r\n\r\nhandlebars.registerHelper('resetLine', function () {\r\n  lineLength = 0;\r\n});\r\n\r\nhandlebars.registerHelper('linesFrom', function (text) {\r\n  const sepFilter = /[\\.!?]\\s|[\\.!?]+$/g;\r\n  const matches = text.matchAll(sepFilter);\r\n  var lines = [];\r\n  lastIndex = 0;\r\n  for (const match of matches) {\r\n    line = text.substring(lastIndex, match.index + 1);\r\n    lastIndex = match.index + match.length;\r\n    lines.push(line);\r\n  }\r\n  if (lines.length === 0 && text.length > 0) {\r\n    lines.push(text);\r\n  } else if (lastIndex < text.length) {\r\n    line = text.substring(lastIndex).trim();\r\n    lines.push(line);\r\n  };\r\n  return lines;\r\n});\r\n\r\n// debugging input count should be smaller or equal than output count.\r\nvar countSourceChr = 0;\r\nvar countOutputChr = 0;\r\nvar debugging = false;\r\n\r\nhandlebars.registerHelper('countOut', function (text) {\r\n  if (debugging) {\r\n    countOutputChr += text.length;\r\n  };\r\n  return text;\r\n});\r\nhandlebars.registerHelper('countIn', function (text) {\r\n  if (debugging) {\r\n    countSourceChr += text.length;\r\n  }\r\n  return text;\r\n});\r\nhandlebars.registerHelper('debug', function (mBool) {\r\n  debugging = mBool;\r\n  countSourceChr = 0;\r\n  countOutputChr = 0;\r\n  if (debugging) {\r\n    return \"debug: \" + debugging;\r\n  }\r\n});\r\n\r\nhandlebars.registerHelper('debugOutput', function () {\r\n  if (debugging) {\r\n    var outMessage = \"Total input text lenght: \" + countSourceChr + \"<br>\" + \"Total output text lenght: \" + countOutputChr + \"<br>\" + \"Matches? \" + (countOutputChr === countSourceChr) + \"<br>\" + \"Differece: \" + (countOutputChr - countSourceChr);\r\n    return outMessage;\r\n  };\r\n});"
+        "helpers": "// check whether input data is an a array or not \r\nhandlebars.registerHelper('isArray', function (text) {\r\n  return (text instanceof Array);\r\n});\r\n\r\n//checker if input data is Json or Array\r\nhandlebars.registerHelper('isJson', function (text) {\r\n  try {\r\n    tmp = JSON.parse(text.replaceAll(\"'\", \"\\\"\"));\r\n  } catch (e) {\r\n    return false;\r\n  }\r\n  return true;\r\n});\r\n\r\n//prettyPrint JSON data and Arrays\r\nhandlebars.registerHelper('jsonpp', function (text) {\r\n  try {\r\n    strObj = JSON.parse(text.replaceAll(\"'\", \"\\\"\"));\r\n  } catch (e) {\r\n    return text;\r\n  }\r\n  return \"<pre>\" + JSON.stringify(strObj, undefined, 5) + \"</pre>\";\r\n});\r\n\r\n// check if result contains a URL\r\nhandlebars.registerHelper('hasURL', function (text) {\r\n  var urlRegex = /(https?:\\/\\/[^\\s]+)\\b/gim;\r\n  return urlRegex.test(text);\r\n});\r\n\r\n// wrap existing URLs in <a> anchors </a>\r\nhandlebars.registerHelper('urlify', function (text) {\r\n  var urlRegex = /(https?:\\/\\/[^\\s]+)\\b/gim;\r\n  var result = text.replace(urlRegex, '<a style=\"color:DodgerBlue;\" href=\"$1\">$1</a>');\r\n  return result\r\n});\r\n\r\n// find \"isi\" cli examples and put them into a code block.\r\nhandlebars.registerHelper('isiFy', function (text) {\r\n  const isiRegex = /(\"|')(isi.+?)((\"|')(\\.)|(\"|'))/g;\r\n  var result = text.replace(isiRegex, '</p><p><code>$2</code></p><p>');\r\n  return result\r\n});\r\n\r\n// manage how many sentences fit into one line, line lenght in # of chr. (note this also includes invisible chr and html tags.)\r\nvar lineLength = 0;\r\nhandlebars.registerHelper('nextLine', function (text, maxLength) {\r\n  lineLength += text.length;\r\n  if (lineLength >= maxLength) {\r\n    lineLength = 0;\r\n    return \"<br/>\";\r\n  }\r\n});\r\n\r\n// reset the line length counter prematurely.\r\nhandlebars.registerHelper('resetLine', function () {\r\n  lineLength = 0;\r\n});\r\n\r\n// separate the lines per result item, separators are [. ! ?] \r\nhandlebars.registerHelper('linesFrom', function (text) {\r\n  const sepFilter = /\\s[\\[]|\\s[{]|[\\.!?]\\s|[\\.!?}\\]]+$/g;\r\n  const matches = text.matchAll(sepFilter);\r\n  var lines = [];\r\n  lastIndex = 0;\r\n  for (const match of matches) {\r\n    line = text.substring(lastIndex, match.index + 1);\r\n    lastIndex = match.index + match.length;\r\n    lines.push(line);\r\n  }\r\n  if (lines.length === 0 && text.length > 0) {\r\n    lines.push(text);\r\n  } else if (lastIndex < text.length) {\r\n    line = text.substring(lastIndex).trim();\r\n    lines.push(line);\r\n  };\r\n  return lines;\r\n});\r\n\r\n// debugging input count should be smaller or equal than output count. \r\nvar countSourceChr = 0;\r\nvar countOutputChr = 0;\r\nvar debugging = false;\r\n\r\nhandlebars.registerHelper('countOut', function (text) {\r\n  if (debugging) {\r\n    countOutputChr += text.length;\r\n  };\r\n  return text;\r\n});\r\nhandlebars.registerHelper('countIn', function (text) {\r\n  if (debugging) {\r\n    countSourceChr += text.length;\r\n  }\r\n  return text;\r\n});\r\nhandlebars.registerHelper('debug', function (mBool) {\r\n  debugging = mBool;\r\n  countSourceChr = 0;\r\n  countOutputChr = 0;\r\n  return \"debug: \" + debugging;\r\n});\r\n\r\nhandlebars.registerHelper('debugOutput', function () {\r\n  if (debugging) {\r\n    var outMessage = \"Total input text lenght: \" + countSourceChr + \"<br>\" + \"Total output text lenght: \" + countOutputChr + \"<br>\" + \"Matches? \" + (countOutputChr === countSourceChr) + \"<br>\" + \"Differece: \" + (countOutputChr - countSourceChr);\r\n    return outMessage;\r\n  };\r\n});"
       },
       "pluginVersion": "9.2.4",
       "targets": [
@@ -433,8 +433,8 @@
       {
         "current": {
           "selected": false,
-          "text": "basic20230116T0000",
-          "value": "basic20230116T0000"
+          "text": "basic20230117T0500",
+          "value": "basic20230117T0500"
         },
         "hide": 2,
         "includeAll": false,
@@ -455,8 +455,8 @@
       {
         "current": {
           "selected": false,
-          "text": "basic_auth_enabled",
-          "value": "basic_auth_enabled"
+          "text": "custom_cronjobs",
+          "value": "custom_cronjobs"
         },
         "hide": 2,
         "includeAll": false,
@@ -476,8 +476,8 @@
       {
         "current": {
           "selected": false,
-          "text": "[\"HTTP Basic Authentication is enabled. Leaving basic authentication enabled may be less secure than disabling it, depending on your security environment and requirements. Basic auth can be disabled by running 'isi_gconfig -t web-config auth_basic=false'.\"]",
-          "value": "[\"HTTP Basic Authentication is enabled. Leaving basic authentication enabled may be less secure than disabling it, depending on your security environment and requirements. Basic auth can be disabled by running 'isi_gconfig -t web-config auth_basic=false'.\"]"
+          "text": "[\"Custom cron jobs are defined on the cluster. Automating tasks on a PowerScale cluster is most safely done with a client using the PowerScale OneFS API to access the cluster. This is particularly true if you are trying to do some type of monitoring task. To learn more about the PowerScale OneFS API, see the OneFS API Reference for your version of OneFS. Locations of modifications found: /etc/mcp/override/crontab.smbtime\"]",
+          "value": "[\"Custom cron jobs are defined on the cluster. Automating tasks on a PowerScale cluster is most safely done with a client using the PowerScale OneFS API to access the cluster. This is particularly true if you are trying to do some type of monitoring task. To learn more about the PowerScale OneFS API, see the OneFS API Reference for your version of OneFS. Locations of modifications found: /etc/mcp/override/crontab.smbtime\"]"
         },
         "hide": 2,
         "includeAll": false,
@@ -497,8 +497,8 @@
       {
         "current": {
           "selected": false,
-          "text": "cluster",
-          "value": "cluster"
+          "text": "1",
+          "value": "1"
         },
         "hide": 2,
         "includeAll": false,
@@ -506,7 +506,7 @@
         "name": "node",
         "options": [
           {
-            "selected": true,
+            "selected": false,
             "text": "cluster",
             "value": "cluster"
           }
@@ -523,7 +523,7 @@
         },
         "definition": "Infinity- (infinity) json",
         "hide": 0,
-        "includeAll": true,
+        "includeAll": false,
         "label": "Cluster",
         "multi": false,
         "name": "papiHost",
@@ -592,8 +592,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Healthcheck Dashboard V1.1",
-  "uid": "7GUuh2O4z",
-  "version": 106,
+  "title": "Healthcheck Dashboard",
+  "uid": "hcf-framework",
+  "version": 4,
   "weekStart": ""
 }

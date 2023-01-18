@@ -742,7 +742,7 @@
           "links": [
             {
               "title": "Healthcheck Details",
-              "url": "/d/7GUuh2O4z/healthcheck-dashboard?var-evaluations=${__data.fields.id}&var-node&var-myAdvise=Select a healthcheck item to view&var-hcDetail=\"\"&var-papiHost=${papiHost}"
+              "url": "/d/hcf-framework/healthcheck-dashboard?var-evaluations=${__data.fields.id}&var-node&var-myAdvise=Select a healthcheck item to view&var-hcDetail=\"\"&var-papiHost=${papiHost}"
             }
           ],
           "mappings": [
